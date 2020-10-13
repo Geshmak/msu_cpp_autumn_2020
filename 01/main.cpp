@@ -7,17 +7,17 @@ void NotPositiveSizeAlloc(Allocator test){
     if (negative==nullptr) 
         std::cout<<"[SUCCESS] negative is nullptr "<<std::endl;
     else 
-        std::cout<<"[SUCCESS]"<<std::endl;
+        std::cout<<"[FAILURE]"<<std::endl;
     
     char* zero=test.alloc(0);
     if (zero==nullptr) 
         std::cout<<"[SUCCESS] zero is nullptr "<<std::endl;
     else 
-        std::cout<<"[SUCCESS]"<<std::endl;
+        std::cout<<"[FAILURE]"<<std::endl;
 
     char* positive=test.alloc(1);
     if (positive==nullptr) 
-        std::cout<<"[SUCCESS] positive is nullptr "<<std::endl;
+        std::cout<<"[FAILURE] positive is nullptr "<<std::endl;
     else 
         std::cout<<"[SUCCESS]"<<std::endl;
     test.reset();
@@ -29,7 +29,7 @@ void SizeTooBigAlloc(Allocator test){
 
     char* enoughSpace=test.alloc(5);
     if (enoughSpace==nullptr) 
-        std::cout<<"[SUCCESS] enoughSpace is nullptr "<<std::endl;
+        std::cout<<"[FAILURE] enoughSpace is nullptr "<<std::endl;
     else 
         std::cout<<"[SUCCESS]"<<std::endl;
 
@@ -37,7 +37,7 @@ void SizeTooBigAlloc(Allocator test){
     if (notenoughSpace==nullptr) 
         std::cout<<"[SUCCESS] notenoughSpace is nullptr "<<std::endl;
     else 
-        std::cout<<"[SUCCESS]"<<std::endl;
+        std::cout<<"[FAILURE]"<<std::endl;
 
     test.reset();
 }
