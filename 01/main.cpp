@@ -1,5 +1,10 @@
 #include <iostream>
 #include "allocator.hpp"
+
+
+using namespace MyAllocator;
+
+
 void NotPositiveSizeAlloc(Allocator test){
     test.makeAllocator(20);
 
@@ -49,7 +54,7 @@ void NoMemoryAllocated(Allocator test){
     if (noMemory==nullptr) 
         std::cout<<"[SUCCESS] noMemory is nullptr "<<std::endl;
     else 
-        std::cout<<"[SUCCESS]"<<std::endl;
+        std::cout<<"[FAILURE]"<<std::endl;
 }
 int main(){
     try{
@@ -64,13 +69,13 @@ int main(){
     catch(int a){
         switch(a){
             case 1:
-                std::cout<<"[expected error, SUCCESS] Error 1:   memory leak, double makeAllocator"<<std::endl;
+                std::cout<<"[expected error, FAILURE] Error 1:   memory leak, double makeAllocator"<<std::endl;
                 break;   
             case 4:
-                std::cout<<"[expected error, SUCCESS] Error 4:   size is not pisitive (in MakeAllocator)"<<std::endl;
+                std::cout<<"[expected error, FAILURE] Error 4:   size is not pisitive (in MakeAllocator)"<<std::endl;
                 break;  
             case 5:
-                std::cout<<"[expected error, SUCCESS] Error 5:   no memory allocated (in reset)"<<std::endl;
+                std::cout<<"[expected error, FAILURE] Error 5:   no memory allocated (in reset)"<<std::endl;
                 break;       
         }
     
