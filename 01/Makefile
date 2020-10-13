@@ -1,16 +1,16 @@
 CC = g++
 FLAGS = -std=c++17 -Wall
 
-all: prog
+all: obj
 
 test:
-	./prog
+	./obj
 
-prog: progb.o  progm.o
-	$(CC) $(FLAGS) -o prog progb.o progm.o
-progm.o: progm.cpp progh.hpp
-	$(CC) $(FLAGS) -c progm.cpp
-progb.o: progb.cpp progh.hpp
-	$(CC) $(FLAGS) -c progb.cpp
+obj: allocator.o  main.o
+	$(CC) $(FLAGS) -o obj allocator.o main.o
+main.o: main.cpp allocator.hpp
+	$(CC) $(FLAGS) -c main.cpp
+allocator.o: allocator.cpp allocator.hpp
+	$(CC) $(FLAGS) -c allocator.cpp
 clean:
-	rm -rf *.o prog
+	rm -rf *.o obj
