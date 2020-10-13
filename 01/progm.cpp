@@ -1,5 +1,5 @@
 #include <iostream>
-#include "progh.h"
+#include "progh.hpp"
 void NotPositiveSizeAlloc(){
     Allocator one;
     one.makeAllocator(20);
