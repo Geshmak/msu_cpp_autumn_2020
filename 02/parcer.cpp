@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <string>
 #include "parcer.hpp"
-#include <ctype.h>
+
 using namespace mypars;
 
 
