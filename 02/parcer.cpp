@@ -6,7 +6,7 @@
 using namespace mypars;
 
 
-void TokenParser::Get(string &str){
+void TokenParser::Get(const string &str){
     c=str[i++];
 }
 TokenParser::TokenParser(){
@@ -17,7 +17,7 @@ TokenParser::TokenParser(){
     digit = nullptr;
     strin = nullptr;
 }
-string TokenParser::Parse(string &str){
+string TokenParser::Parse(const string &str){
     std::string res = "";
     std::string buf = "";
     i = 0;

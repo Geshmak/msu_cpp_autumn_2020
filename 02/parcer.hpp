@@ -24,12 +24,12 @@ using typestrin = function<string (const string&)>;
                 typestrin strin;
                 
             public:
-                void Get(string &st);
+                void Get(const string &st);
                 TokenParser();
                 void SetStartCallback(const typestart &newstart );
                 void SetDigitTokenCallback(const typedigit &newdigit);
                 void SetStringTokenCallback(const typestrin &newstrin);
-                string Parse(string &st);           
+                string Parse(const string &st);           
         };
 }
 
