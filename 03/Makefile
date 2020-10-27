@@ -14,6 +14,3 @@ Matrix.o: Matrix.cpp Matrix.hpp
 	$(CC) $(FLAGS) -c Matrix.cpp
 clean:
 	rm -rf *.o obj
-	
-	
-	

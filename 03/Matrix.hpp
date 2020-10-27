@@ -33,7 +33,7 @@ class Matrix{
 
         Matrix& operator=(const Matrix &matrix);
         Matrix& operator*=(int Number);
-        Matrix operator+(const Matrix& matrix);
+        Matrix operator+(const Matrix& matrix) const;
         bool operator==(const Matrix& matrix) const;
         bool operator!=(const Matrix& matrix) const;
 

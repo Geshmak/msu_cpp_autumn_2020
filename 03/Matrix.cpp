@@ -59,7 +59,7 @@ ostream& operator<<(ostream& Out,const Matrix& matrix){
     
     return Out;
 }
-Matrix Matrix::operator+(const Matrix& matrix){
+Matrix Matrix::operator+(const Matrix& matrix) const{
     if ((Row != matrix.Row)||(Col != matrix.Col)){
         throw "wrong sizes summ";
     }
@@ -75,6 +75,10 @@ Matrix Matrix::operator+(const Matrix& matrix){
 }
 
 Matrix& Matrix::operator=(const Matrix &matrix){
+    
+    if (matrix == *this){
+        return *this;
+    }
     for (int i = 0; i < Row; i++){
         delete[] Matr[i];
     }  
