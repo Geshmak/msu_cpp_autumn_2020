@@ -28,9 +28,10 @@ class Matrix{
         Proxy operator[](int RowNum);
         const Proxy operator[](int RowNum) const;
 
-        int GetRow();
-        int GetCol();
+        int GetRow() const;
+        int GetCol() const;
 
+        Matrix& operator=(const Matrix &matrix);
         Matrix& operator*=(int Number);
         Matrix operator+(const Matrix& matrix);
         bool operator==(const Matrix& matrix) const;
