@@ -31,6 +31,7 @@ void UnitTestDefault(int &flag){
         flag = 5;
     }
     Matrix m2 = m1 + m;
+    m2 = m + m;
     cout << m2 << endl;
 }
 
