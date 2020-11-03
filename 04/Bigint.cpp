@@ -1,22 +1,26 @@
 #include <iostream>
+#include <string>
 #include "Bigint.hpp"
 
 using namespace std;
 
-Bigint::Bigint(string str, int sizenum){
+const int base = 3;
+const int basemul = 1000;
+
+Bigint::Bigint(const string& str, int sizenum){
+    string linetmp = str; 
     int negflag = 0;
-    if (str[0] == '-'){
+    if (linetmp[0] == '-'){
         negflag = 1;
-        str.erase(0,1);
+        linetmp.erase(0,1);
     }
-    for(int i = str.length()-1; i >= 0; i--){
-        if (!isdigit(str[i])) 
+    for(int i = linetmp.length()-1; i >= 0; i--){
+        if (!isdigit(linetmp[i])) 
             throw "Not Number";
     }
-    
     if (!sizenum){
-        Size = str.length() / 3 ;
-        if (str.length() % 3 != 0)
+        Size = linetmp.length() / base ;
+        if (linetmp.length() % base != 0)
             Size++;
     }
     else   
@@ -26,39 +30,39 @@ Bigint::Bigint(string str, int sizenum){
     for(int k = 0; k < Size;k++){
         Number[k] = 0;
     }
-    
-
     int count = 0;
-    int mul = 1;
+    int mul = 1 ;
     int j = 0;
-    for(int i = str.length()-1; i >= 0; i--){
-        Number[j] += (str[i] - '0') * mul;
+    for(int i = linetmp.length() - 1; i >= 0; i--){
+        Number[j] += (linetmp[i] - '0') * mul;
         mul *= 10;
-        
-        if (count >= 2){
+        if (count >= base - 1){
             mul = 1;
             j++;
             count = -1;
-        }
+            
+            
+        }  
         count++;
     }
     if (negflag)
         Number[Size -1] *= -1;
+    //cout<<"!"<<endl;
     
 }
 Bigint Bigint::operator+(const Bigint& num) const{
-    int flag = 0;
+    int szlow = 0;
     int sz = 0;
     if (Size >= num.Size){
-        sz = Size ;
-        flag = 1;
+        sz = Size + 1;
+        szlow = num.Size;
     }
     else{
-        sz = num.Size;
+        sz = num.Size + 1;
+        szlow = Size;
     }  
     Bigint res = Bigint("0",sz);
 
-    
     if ((Number[Size - 1] > 0) && (num.Number[num.Size - 1] < 0)){
         res = *this-(-num);
         return (res);   
@@ -74,24 +78,15 @@ Bigint Bigint::operator+(const Bigint& num) const{
     
     int extr = 0;
     int sum = 0;
-    if (flag){
-        for(int i = 0; i < res.Size; i++ ){
-            sum = Number[i];
-            if (i <= num.Size)
-                sum += num.Number[i];
-            res.Number[i] = extr + sum % 1000;
-            extr = sum / 1000;
-        }
+    res = *this;
+
+    for(int i = 0; i < szlow; i++ ){
+        sum = Number[i] + num.Number[i];
+        res.Number[i] = extr + sum % basemul;
+        extr = sum / basemul;
     }
-    else{
-        for(int i = 0; i < res.Size; i++ ){
-            sum = num.Number[i];
-            if (i <= Size)
-                sum += Number[i];
-            res.Number[i] = extr + sum % 1000;
-            extr = sum / 1000;
-        }
-    }
+    res.Number[szlow] += extr;
+
     int i;
     for(i = res.Size - 1; i >= 0; i--){
         if (res.Number[i] != 0)
@@ -113,15 +108,9 @@ Bigint Bigint::operator-() const{
 
 Bigint Bigint::operator*(const Bigint& num) const{
     int sz = 0;
-    if (Size >= num.Size){
-        sz = Size * 2;
-    }
-    else{
-        sz = num.Size * 2;
-    }
-
-    Bigint res = Bigint("0",sz);
     
+    sz = Size + num.Size + 1;
+    Bigint res = Bigint("0",sz);
     if ((Number[Size - 1] < 0) && (num.Number[num.Size - 1] < 0)){
         res = -(*this) * -(num);
         return res;
@@ -136,20 +125,24 @@ Bigint Bigint::operator*(const Bigint& num) const{
     }
     int extr = 0;
     int mul = 0;
-    for(int j = 0; j < num.Size; j++){ 
-        extr = 0;
-        for(int i = 0; i <= Size; i++ ){
+    int i,j;
+    for(j = 0; j < num.Size; j++){ 
+        for(i = 0; i < Size; i++ ){
             mul = Number[i] * num.Number[j];
-            res.Number[i + j] += extr + mul % 1000;
-            extr = mul / 1000;
+            res.Number[i + j] += extr + mul % basemul;
+            extr = mul / basemul;
+            
         }
-    }
+        res.Number[i + j] += extr;
+        extr = 0;
+          
+    } 
     for(int k = 0; k < res.Size - 1; k++){   
-        extr = res.Number[k] / 1000;
-        res.Number[k] = res.Number[k] % 1000;
+        extr = res.Number[k] / basemul;
+        res.Number[k] = res.Number[k] % basemul;
         res.Number[k+1] += extr;
     }
-    int i;
+
     for(i = res.Size - 1; i >= 0; i--){
         if (res.Number[i] != 0)
             break;
@@ -158,26 +151,65 @@ Bigint Bigint::operator*(const Bigint& num) const{
     return res;
 }
 Bigint Bigint::operator-(const Bigint& num) const{
-    Bigint res = Bigint();
-    int extr = 0;
-    int diff = 0;
+    int sz = 0;
     int k;
-     
     if (*this >= num){
         k = 1;
-        res.Size = Size;
+        sz = Size;
     }
     else if (*this < num){
         k = -1;
-        res.Size = num.Size;
+        sz = num.Size;
     }
+
+    //cout<<k<<endl;
+    Bigint res = Bigint("0",sz);
+
+    if ((Number[Size - 1] < 0) && (num.Number[num.Size - 1] < 0)){
+        res = -(num) - -(*this)  ;
+        return res;
+    }
+    if ((Number[Size - 1] < 0)){
+        res = -(*this) + num;
+        return -res;
+    }
+    if ((num.Number[num.Size - 1] < 0)){
+        res = *this + -(num);
+        return res;
+    }
+
+    int extr = 0;
+    int diff = 0;
+    
     for(int i = 0; i < res.Size; i++ ){
-        diff = k * (Number[i] - num.Number[i]) - extr;
-        extr = 0;
-        if ((diff < 0) && (i+1 < Size)){
-            extr = 1;
+        if (k == 1){
+            if (i < num.Size){
+                diff = (Number[i] - num.Number[i]) - extr;
+                extr = 0;
+            }
+            else{
+                diff = Number[i] - extr;
+                extr = 0;
+            }
+            if ((diff < 0) && (i+1 < res.Size)){
+                extr = 1;
+            }
+            res.Number[i] = diff + extr * basemul;
         }
-        res.Number[i] = diff + extr * 1000;
+        if (k == -1){
+            if (i < Size){
+                diff = (num.Number[i] - Number[i]) - extr;
+                extr = 0;
+            }
+            else{
+                diff = num.Number[i] - extr;
+                extr = 0;
+            }
+            if ((diff < 0) && (i+1 < res.Size)){
+                extr = 1;
+            }
+            res.Number[i] = diff + extr * basemul;
+        }
     }
     int i;
     for(i = res.Size - 1; i > 0; i--){
@@ -189,30 +221,16 @@ Bigint Bigint::operator-(const Bigint& num) const{
     return res;
 }
 Bigint::Bigint(int num){
-    int count = 0;
-    int tmp = num;
-    while (tmp > 0){
-        tmp /= 1000;
-        count++;
-    }
-    Number = new int[count];
-    Size = count;
-    for (int i = 0; i < Size; i++){
-        Number[i] = num % 1000;
-        num /= 1000;
-    }
-
-    
+    string str = to_string(num);
+    *this = Bigint(str);
 }
+
 bool Bigint::operator==(const Bigint& num) const{
-    int sz = 0;
-    if (Size >= num.Size){
-        sz = Size;
+    if (Size != num.Size){
+        return false;
     }
-    else{
-       sz = num.Size; 
-    }
-    for (int i = sz - 1; i >= 0;i--){
+    for (int i = Size - 1; i >= 0; i--){
+        
         if (Number[i] != num.Number[i])
             return false;
     }
@@ -269,41 +287,14 @@ bool Bigint::operator>(const Bigint& num) const{
 }
 
 bool Bigint::operator>=(const Bigint& num) const{
-    
-    if (Size < num.Size){
-        return false;
-    }
-    else if (Size > num.Size){
-        return true;
-    }
-    for (int i = Size - 1; i >= 0;i--){ 
-        if (Number[i] > num.Number[i]){
-            return true;
-        }
-        else if (Number[i] < num.Number[i]){
-            return false;
-        }      
-    }
-    return true;
+    bool res = !(*this < num);
+    return res;
 }
 
 bool Bigint::operator<=(const Bigint& num) const{
-    
-    if (Size > num.Size){
-        return false;
-    }
-    else if (Size < num.Size){
-        return true;
-    }
-    for (int i = Size - 1; i >= 0;i--){ 
-        if (Number[i] < num.Number[i]){
-            return true;
-        }
-        else if (Number[i] > num.Number[i]){
-            return false;
-        }      
-    }
-    return true;
+    bool res = !(*this > num);
+    return res;
+
 }
 ostream& operator<<(ostream& Out, const Bigint& num){
     
@@ -317,7 +308,7 @@ ostream& operator<<(ostream& Out, const Bigint& num){
         flag = 0;
         if ((flag2)){// значащие нули
             tmp = to_string(num.Number[i]);
-            while (tmp.length() < 3){
+            while (tmp.length() < base){
                 tmp ="0" + tmp;
             }
             res += tmp;
@@ -334,8 +325,6 @@ Bigint& Bigint::operator=(const Bigint& num){
     
     if (num == *this)
         return *this;
-
-    delete[] Number;
     
     Size = num.Size;
     Number = new int[Size];
@@ -358,12 +347,11 @@ Bigint::Bigint(Bigint&& other){
     other.Number = nullptr;
     other.Size = 0; 
 }
-Bigint& Bigint::operator=(Bigint&& num){
+Bigint& Bigint::operator=(Bigint&& num){ 
+    
     if (num == *this)
         return *this;
-
-    delete[] Number;
-
+    //cout<<"!"<<endl;
     Size = num.Size;
     Number = num.Number;
     
@@ -374,4 +362,5 @@ Bigint& Bigint::operator=(Bigint&& num){
 Bigint::~Bigint(){
     //cout<<"~!"<<endl;
     delete[] Number;
+    
 }

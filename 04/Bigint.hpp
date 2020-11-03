@@ -8,7 +8,7 @@ class Bigint{
         int Size;
     public:
         //Bigint();
-        Bigint(string str  = "0", int sizenum = 0);
+        Bigint(const string& str  = "0", int sizenum = 0);
         Bigint(const Bigint& copy);
         Bigint(Bigint&& other);
         Bigint(int num);
