@@ -88,7 +88,7 @@ Bigint Bigint::operator+(const Bigint& num) const{
     res.Number[szlow] += extr;
 
     int i;
-    for(i = res.Size - 1; i >= 0; i--){
+    for(i = res.Size - 1; i > 0; i--){
         if (res.Number[i] != 0)
             break;
     }
