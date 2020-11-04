@@ -126,6 +126,7 @@ Bigint Bigint::operator*(const Bigint& num) const{
     int extr = 0;
     int mul = 0;
     int i,j;
+    //cout<<Size<<"  "<<num.Size<<endl;
     for(j = 0; j < num.Size; j++){ 
         for(i = 0; i < Size; i++ ){
             mul = Number[i] * num.Number[j];
@@ -142,8 +143,8 @@ Bigint Bigint::operator*(const Bigint& num) const{
         res.Number[k] = res.Number[k] % basemul;
         res.Number[k+1] += extr;
     }
-
-    for(i = res.Size - 1; i >= 0; i--){
+    
+    for(i = res.Size - 1; i > 0; i--){
         if (res.Number[i] != 0)
             break;
     }

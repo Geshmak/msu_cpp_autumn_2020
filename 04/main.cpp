@@ -58,6 +58,17 @@ void UTMul(int& flag){
         flag = 6;  
     }
 }
+
+void UTMulZ(int& flag){
+    Bigint a("0");
+    Bigint b("123456789012345678901");
+    Bigint c = a * b;
+    Bigint d = b * a;
+    if (!((c == "0") && (d == "0"))){
+        flag = 7;  
+    }
+}
+
 int main(){
     try{
 
@@ -101,8 +112,14 @@ int main(){
             cout<<"Mul Succes"<<endl;
         else
             cout<<"Mul Fail"<<endl;
-        if (flag == 0)
 
+        UTMulZ(flag);
+        if (flag == 0)
+            cout<<"MulZ Succes"<<endl;
+        else
+            cout<<"MulZ Fail"<<endl;
+        
+        if (flag == 0)
             cout<<"++Nice++"<<endl;
         
         
