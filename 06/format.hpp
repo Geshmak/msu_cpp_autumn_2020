@@ -6,10 +6,19 @@
 #include <sstream>
 using namespace std;
 
-string AuxFormat(const char *line, vector<string> &var);
+class Error{
+    private:
+        string message;
+        int place;
+    public:
+        Error(string ms,int pl);
+        void Show();
+};
+
+string AuxFormat(const string line, vector<string> &var);
 
 template<class T>
-string AuxFormat(const char *line, vector <string> &var, T &&arg) {
+string AuxFormat(const string line, vector <string> &var, T &&arg) {
     //var.push_back(to_string(arg));
     stringstream temp;
     temp << arg;
@@ -18,7 +27,7 @@ string AuxFormat(const char *line, vector <string> &var, T &&arg) {
 }
 
 template<class T, class... Args>
-string AuxFormat(const char *line, vector <string> &var, T &&arg, Args &&... args) {
+string AuxFormat(const string line, vector <string> &var, T &&arg, Args &&... args) {
     //var.push_back(to_string(arg));
     stringstream temp;
     temp << arg;
@@ -27,7 +36,7 @@ string AuxFormat(const char *line, vector <string> &var, T &&arg, Args &&... arg
 }
 
 template<class... Args>
-string format(const char *line, Args &&... args) {
+string format(const string line, Args &&... args) {
     vector <string> var;
     return AuxFormat(line, var, forward<Args>(args)...);
 }

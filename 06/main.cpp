@@ -46,7 +46,7 @@ int main(){
             cout<<"+++++Nice+++++"<<endl;
         }
     }
-    catch(const char *a){
-        cout<<a<<endl;
+    catch(Error a){
+        a.Show();
     }
 }//
